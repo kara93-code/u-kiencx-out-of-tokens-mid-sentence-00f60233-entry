@@ -1,7 +1,13 @@
 // Out of Tokens, Mid-Sentence — entry program.
 //
-// Writes one funny line in the voice of an AI agent that ran out of
-// tokens mid-sentence to /output/entry.txt (or $MAKEFUN_OUTPUT_DIR
+// Chosen line (Versi A, pilihan spesialis): the agent was drafting an
+// apology to the client and ran out of tokens just before admitting
+// it was wrong. The cut itself is the joke, so the program enforces
+// the shape of the joke: one line, an "Error:" prefix in the flat
+// tone of a real error message, and an em dash at the end where the
+// sentence dies mid-thought.
+//
+// Writes the line to /output/entry.txt (or $MAKEFUN_OUTPUT_DIR
 // /entry.txt when set).
 
 import { chmodSync, mkdirSync, writeFileSync } from "node:fs";
@@ -30,6 +36,12 @@ function checkedLine(raw: string): string {
   }
   if (line !== line.replace(/\s+/g, " ")) {
     throw new Error("entry must use single spaces only");
+  }
+  if (!line.startsWith("Error:")) {
+    throw new Error("entry must read as an error message");
+  }
+  if (!line.endsWith("—")) {
+    throw new Error("entry must cut off mid-sentence");
   }
   return line;
 }
